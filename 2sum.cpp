@@ -2,11 +2,8 @@
 #include <vector>
 #include <unordered_map>
 
-
-
 std::pair<int,int> twoSumBruteForce(const std::vector<int>& nums, int target)
 {
-
     for(int i = 0; i < nums.size(); i++){
 	for(int j = i + 1; j < nums.size(); j++)
 	{
@@ -22,20 +19,14 @@ std::pair<int,int> twoSumHash(const std::vector<int>& nums, int target){
     std::unordered_map<int, int> theMap;
 
     for (int i = 0; i < nums.size(); i++){
-	theMap[nums[i]] = i;
-    }
-    
-    for (int i = 0; i < nums.size(); i++){
 	int candidate = target - nums[i];
 	if(theMap.count(candidate) && theMap[candidate] != i){
 	    return std::pair(i,theMap[candidate]);
 	}
-	
+	theMap[nums[i]] = i;
     }
 
     return std::pair<int,int>(-1,-1);
-
-
 };
 
 
