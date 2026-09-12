@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <chrono>
 
 
 int iterativeBinarySearch(std::vector<int> &nums, int target){
@@ -38,9 +39,19 @@ int recursiveBinarySearch(std::vector<int> &nums, int high, int low, int target)
     return -1;
 };
 
+int linearSearch(std::vector<int> &nums, int target){
+    for(int i = 0; i < nums.size(); i++){
+	if (nums[i] == target){
+	    return i;
+	}
+    }
+    return -1;
+}
+
 
 
 int main(){
+
    std::vector numbers = { 2, 4, 7, 10, 11, 32, 45, 87 };
 
    int testNumbers[5][8] = {
@@ -55,6 +66,7 @@ int main(){
    int currTarget{};
    int answer1{};
    int answer2{};
+   int answer3{};
    std::vector<int> currVec; 
    for (int i = 0; i < 5; i++){
 
@@ -62,13 +74,36 @@ int main(){
 	for (int j = 0; j < 8; j++){
 	   currVec.push_back(testNumbers[i][j]);
 	}
-
+	
+	auto start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i< 1000000; i++){
 	answer1 = iterativeBinarySearch(currVec, currTarget);
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	auto iterativeDuration = std::chrono::duration_cast<std::chrono::milliseconds>( end - start );
+	
+	start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i< 1000000; i++){
 	answer2 = recursiveBinarySearch(currVec, currVec.size()-1,0,currTarget);
-    
+	}
+	end = std::chrono::high_resolution_clock::now();
+	auto recursiveDuration = std::chrono::duration_cast<std::chrono::milliseconds>( end - start );
+
+	start = std::chrono::high_resolution_clock::now();
+	for (int i = 0; i< 1000000; i++){
+	answer3 = linearSearch(currVec, currTarget);
+	}
+	end = std::chrono::high_resolution_clock::now();
+	auto linearDuration = std::chrono::duration_cast<std::chrono::milliseconds>( end - start );
+
+
 	currVec.clear();
 
-	std::cout << "\nIterative: " << answer1 << "\n" << "Recursive: " << answer2 << "\n";
+	std::cout << 
+	    "\nCase " << i << ":" << 
+	    "\nIterative: " << answer1 << " Runtime: " << iterativeDuration.count() << "ms"
+	    "\nRecursive: " << answer2 << " Runtime: "<< recursiveDuration.count() << "ms"
+	    "\nLinear: " << answer3 << " Runtime: "<< linearDuration.count() << "ms\n";
     }
    }
 
